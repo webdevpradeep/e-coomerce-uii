@@ -1,28 +1,53 @@
-import React from "react";
+import React from 'react';
+import { ShoppingCart } from 'lucide-react';
+// import { discountedPrice, paiseToRupee } from '../../utils/calculation';
+import { discountedPrice, paiseToRupee } from '../utils/calculation';
+import Link from 'next/link';
 
-const Card = (props) => {
+export default function ProductCard({ product }) {
   return (
-    <article className="overflow-hidden rounded-lg shadow-sm transition hover:shadow-lg">
-      {props.children && <div>{props.children}</div>}
-      <img alt="" src={props.thumbnail} className="h-56 w-full object-cover" />
-
-      <div className="bg-white p-4 sm:p-6">
-        <time datetime="2022-10-10" className="block text-xs text-gray-500">
-          {" "}
-          {props.date}{" "}
-        </time>
-
-        <a href="#">
-          <h3 className="mt-0.5 text-lg text-gray-900">{props.title}</h3>
-        </a>
-
-        <p className="mt-2 line-clamp-3 text-sm/relaxed text-gray-500">
-          {props.desc}
-        </p>
+    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      {/* Product Image */}
+      <div className="relative">
+        <img
+          src={product.thumbnail}
+          alt="Product Image"
+          className="w-full h-64 object-cover"
+        />
+        {/* Discount Tag */}
+        <div className="absolute top-0 right-0 bg-red-500 text-white font-semibold py-1 px-3 rounded-bl-lg">
+          {product.discount}% OFF
+        </div>
       </div>
-      <button onClick={props.onPrintTable}>Click to Print Table</button>
-    </article>
-  );
-};
 
-export default Card;
+      {/* Product Details */}
+      <div className="p-4">
+        <Link
+          href={`/products/${product.product_id}`}
+          className="text-lg font-semibold text-gray-800"
+        >
+          {product.product_name}
+        </Link>
+        <p className="text-sm text-gray-600 mt-1">{product.meta_description}</p>
+
+        {/* Price */}
+        <div className="mt-3 flex items-center">
+          <span className="text-xl font-bold text-gray-900">
+            {' '}
+            &#8377;
+            {paiseToRupee(discountedPrice(product.price, product.discount))}
+          </span>
+          <span className="text-sm text-gray-500 line-through ml-2">
+            &#8377;{paiseToRupee(product.price)}
+          </span>
+        </div>
+
+        {/* Add to Cart Button */}
+        <button className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md flex items-center justify-center transition duration-300">
+          <ShoppingCart size={20} className="mr-2" />
+          Add to Cart
+        </button>
+      </div>
+    </div>
+  );
+}
