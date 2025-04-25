@@ -1,6 +1,5 @@
 import React from 'react';
 import { ShoppingCart } from 'lucide-react';
-// import { discountedPrice, paiseToRupee } from '../../utils/calculation';
 import { discountedPrice, paiseToRupee } from '../utils/calculation';
 import Link from 'next/link';
 
@@ -23,7 +22,7 @@ export default function ProductCard({ product }) {
       {/* Product Details */}
       <div className="p-4">
         <Link
-          href={`/products/${product.product_id}`}
+          href={`/products/${product.slug}`}
           className="text-lg font-semibold text-gray-800"
         >
           {product.product_name}

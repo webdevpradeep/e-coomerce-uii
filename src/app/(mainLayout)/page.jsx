@@ -2,22 +2,20 @@
 
 import { useEffect, useState } from 'react';
 import ProductCard from '../../components/Card';
-
-import { baseURL } from '../../utils/apiClient';
+import { baseURL, getProducts } from '../../utils/apiClient';
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch(`${baseURL}/products/public?limit=20&page=1`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const res = await getProducts();
 
       const data = await res.json();
+      if (data.error) {
+        alert(data.message);
+        return;
+      }
       console.log(data);
       setProducts(data);
     } catch (error) {
