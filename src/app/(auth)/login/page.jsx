@@ -1,6 +1,7 @@
 'use client';
 // LoginForm.js
 import { useState } from 'react';
+import { setCookie } from '../../../utils/cookies';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
