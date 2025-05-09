@@ -1,9 +1,10 @@
 'use client';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { resetPassword } from '../../../../utils/apiClient';
 
 const ResetPasswordPage = () => {
+  const router = useRouter();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const { token } = useParams();
@@ -11,7 +12,11 @@ const ResetPasswordPage = () => {
   console.log(token);
 
   const enableDisableBtn = () => {
-    if (!password.length || !confirmPassword.length) {
+    if (
+      !password.length ||
+      !confirmPassword.length ||
+      password !== confirmPassword
+    ) {
       return true;
     }
     return false;
@@ -29,6 +34,9 @@ const ResetPasswordPage = () => {
       }
 
       alert(data.message);
+      router.push('/login');
+      setPassword('');
+      setConfirmPassword('');
     } catch (error) {
       console.log(error);
     }
