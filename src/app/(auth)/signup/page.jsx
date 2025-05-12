@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import { useGlobalContext } from '../../../context/GlobalContext';
 import Link from 'next/link';
 import { useState } from 'react';
-import { signup } from '../../../utils/apiClient';
+import { apiClient } from '../../../utils/apiClient';
 
 const SignupPage = () => {
   const router = useRouter();

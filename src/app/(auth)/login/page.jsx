@@ -5,7 +5,7 @@ import { setCookie } from '../../../utils/cookies';
 import Link from 'next/link';
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
-import { login } from '../../../utils/apiClient';
+import { apiClient } from '../../../utils/apiClient';
 
 const LoginPage = () => {
   const router = useRouter();
@@ -26,8 +26,8 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await login({ email, password });
-      const data = await res.json();
+      const data = await apiClient.login({ email, password });
+
       console.log(data);
       if (data.error) {
         alert(data.message);

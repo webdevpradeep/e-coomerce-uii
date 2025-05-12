@@ -2,15 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import ProductCard from '../../components/Card';
-import { baseURL, fetchMyProfile, getProducts } from '../../utils/apiClient';
+import { apiClient } from '../../utils/apiClient';
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
 
   const getProfile = async () => {
     try {
-      const res = await fetchMyProfile();
-      const data = await res.json();
+      const data = await apiClient.fetchMyProfile();
+
       console.log(data);
     } catch (error) {
       console.log(error);
@@ -19,9 +19,8 @@ const HomePage = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await getProducts();
+      const data = await apiClient.getProducts();
 
-      const data = await res.json();
       if (data.error) {
         alert(data.message);
         return;

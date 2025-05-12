@@ -2,118 +2,48 @@ import { getCookie } from './cookies';
 
 export const baseURL = 'https://api.store.inflection.org.in';
 
-// fetch client is a wrapper around the fetch API that adds default headers and options to the request.
-export const fetchClient = async (url, options = {}) => {
-  const defaultHeaders = {
-    'Content-Type': 'application/json',
-  };
-
-  const config = {
-    ...options,
-    headers: {
-      ...defaultHeaders,
-      ...options.headers,
-    },
-  };
-
-  return await fetch(url, config);
-};
-
-// authenticated fetch client is a wrapper around the fetch API that adds default headers and options to the request.
-// It also adds the authorization token to the request headers.
-export const fetchClientAuth = async (url, options = {}) => {
-  const token = getCookie('access_token'); // or sessionStorage
+export const apiClient = async (url, method, body = null, tokenName = '') => {
+  const accessToken = getCookie('access_token');
 
   const defaultHeaders = {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`,
   };
 
-  // if (token) {
-  //   defaultHeaders["Authorization"] = `Bearer ${token}`;
-  // }
+  if (tokenName) {
+    defaultHeaders['Authorization'] = `Bearer ${getCookie(tokenName)}`;
+  } else {
+    defaultHeaders['Authorization'] = `Bearer ${accessToken}`;
+  }
 
-  const config = {
-    ...options,
-    headers: {
-      ...defaultHeaders,
-      ...options.headers,
-    },
-  };
+  let config;
 
-  return await fetch(url, config);
+  if (!body || body === null) {
+    config = {
+      method: method,
+      headers: {
+        ...defaultHeaders,
+      },
+    };
+  } else {
+    config = {
+      method: method,
+      headers: {
+        ...defaultHeaders,
+      },
+      body: JSON.stringify(body),
+    };
+  }
+
+  const response = await fetch(`${baseURL}${url}`, config);
+  return await response.json();
 };
 
-// ----------- User Authentication -------------
+// Auth APIs
+apiClient.login = (payload) => apiClient('/users/login', 'POST', payload);
 
-export const login = async (payload) => {
-  return await fetchClient(`${baseURL}/users/login`, {
-    method: 'POST',
-    body: JSON.stringify(payload),
-  });
-};
-// export const login = async (payload) => {
-//   return await fetch(`${baseURL}/users/login`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(payload),
-//   });
-// };
+// User APIs
+apiClient.fetchMyProfile = () => apiClient('/users/profiles/my', 'GET');
 
-export const signup = async (payload) => {
-  return await fetch(`${baseURL}/users/signup`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  });
-};
-
-export const resetPassword = async (payload, token) => {
-  return await fetch(`${baseURL}/users/reset_password/${token}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  });
-};
-
-export const forgotPassword = async (payload) => {
-  return await fetch(`${baseURL}/users/forgot_password`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  });
-};
-
-export const fetchMyProfile = async () => {
-  return await fetchClientAuth(`${baseURL}/users/profiles/my`, {
-    method: 'GET',
-  });
-};
-
-// --------------- Products Fetching ------------
-
-export const getProducts = async (filter = 'limit=20&page=1') => {
-  return await fetch(`${baseURL}/products/public?${filter}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-};
-
-export const getProductDetails = async (slug) => {
-  return await fetch(`${baseURL}/products/public/s/${slug}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-};
+// Product APIs
+apiClient.getProducts = (filter = '') =>
+  apiClient(`/products?${filter}`, 'GET');

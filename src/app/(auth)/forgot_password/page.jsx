@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { forgotPassword } from '../../../utils/apiClient';
+import { apiClient } from '../../../utils/apiClient';
 import { useRouter } from 'next/navigation';
 
 const ForgotPasswordPage = () => {
