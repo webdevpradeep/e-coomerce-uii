@@ -1,7 +1,7 @@
 'use client';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import { resetPassword } from '../../../../utils/apiClient';
+import { apiClient } from '../../../../utils/apiClient';
 
 const ResetPasswordPage = () => {
   const router = useRouter();
@@ -26,8 +26,10 @@ const ResetPasswordPage = () => {
     e.preventDefault();
 
     try {
-      const res = await resetPassword({ password }, decodeURIComponent(token));
-      const data = await res.json();
+      const data = await apiClient.resetPassword(decodeURIComponent(token), {
+        password,
+      });
+
       console.log(data);
       if (data.error) {
         alert(data.message);

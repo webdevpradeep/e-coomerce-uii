@@ -17,12 +17,11 @@ const ForgotPasswordPage = () => {
   const handleForgotPassword = async (e) => {
     e.preventDefault();
     try {
-      const res = await forgotPassword({
+      const data = await apiClient.forgotPassword({
         email: email,
         reset_password_ui_url: 'http://localhost:3000/reset_password',
       });
 
-      const data = await res.json();
       console.log(data);
       if (data.error) {
         alert(data.message);
