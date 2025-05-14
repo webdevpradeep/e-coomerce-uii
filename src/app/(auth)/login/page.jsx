@@ -6,6 +6,10 @@ import Link from 'next/link';
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { apiClient } from '../../../utils/apiClient';
+import {
+  validateEmail,
+  validatePassword,
+} from '../../../utils/validateFormFields';
 
 const LoginPage = () => {
   const router = useRouter();
@@ -28,16 +32,6 @@ const LoginPage = () => {
       return true;
     }
     return false;
-  };
-
-  const validateEmail = (email) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-  };
-
-  const validatePassword = (password) => {
-    const re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
-    return re.test(password);
   };
 
   const handleLogin = async (e) => {
@@ -70,6 +64,7 @@ const LoginPage = () => {
       console.log(data);
       if (data.error) {
         setError(data.message);
+        setIsLoading(false);
         return;
       }
 
