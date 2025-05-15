@@ -40,10 +40,21 @@ export const apiClient = async (url, method, body = null, tokenName = '') => {
 
 // Auth APIs
 apiClient.login = (payload) => apiClient('/users/login', 'POST', payload);
+apiClient.signup = (payload) => apiClient('/users/signup', 'POST', payload);
+apiClient.resetPassword = (token, payload) =>
+  apiClient(`/users/reset_password/${token}`, 'PATCH', payload);
+apiClient.forgotPassword = (payload) =>
+  apiClient('/users/forgot_password', 'POST', payload);
+
+apiClient.refreshAccessToken = () =>
+  apiClient('/users/renew_token', 'GET', null, 'refresh_token');
 
 // User APIs
 apiClient.fetchMyProfile = () => apiClient('/users/profiles/my', 'GET');
 
 // Product APIs
-apiClient.getProducts = (filter = '') =>
-  apiClient(`/products?${filter}`, 'GET');
+apiClient.getProducts = (filter = 'limit=20&page=1') =>
+  apiClient(`/products/public?${filter}`, 'GET');
+
+// Category APIs
+apiClient.fetchCategories = () => apiClient('/categories/list', 'GET');
