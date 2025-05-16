@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { baseURL, apiClient } from '../../../../utils/apiClient';
 import { useParams } from 'next/navigation';
+import { apiClient } from '../../../../utils/apiClient';
 import { paiseToRupee } from '../../../../utils/calculation';
 
 const ProductDetailsPage = () => {
@@ -10,8 +10,8 @@ const ProductDetailsPage = () => {
   const { slug } = useParams();
   const fetchProductDeatils = async (slug) => {
     try {
-      const res = await getProductDetails(slug);
-      const data = await res.json();
+      const data = await apiClient.getProductBySlug(slug);
+
       console.log(data);
       if (data.error) {
         alert(data.message);
