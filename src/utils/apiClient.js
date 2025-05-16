@@ -56,5 +56,17 @@ apiClient.fetchMyProfile = () => apiClient('/users/profiles/my', 'GET');
 apiClient.getProducts = (filter = 'limit=20&page=1') =>
   apiClient(`/products/public?${filter}`, 'GET');
 
+apiClient.getProductBySlug = (slug) =>
+  apiClient(`/products/public/s/${slug}`, 'GET');
+
 // Category APIs
 apiClient.fetchCategories = () => apiClient('/categories/list', 'GET');
+
+apiClient.getCategoryBySlug = (slug) =>
+  apiClient(`/categories/s/${slug}`, 'GET');
+
+apiClient.getCategoryProductsBySlug = (slug) =>
+  apiClient(`/products/public/cat/${slug}`, 'GET');
+
+apiClient.getAttributesByCategory = (id) =>
+  apiClient(`/attributes/${id}`, 'GET');
