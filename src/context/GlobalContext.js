@@ -57,7 +57,7 @@ export const GlobalContextProvider = ({ children }) => {
     const checkLogin = () => {
       const accessToken = getCookie('access_token');
       const refreshToken = getCookie('refresh_token');
-      console.log('I am running');
+
       if (accessToken || accessToken !== null) {
         return;
       }
