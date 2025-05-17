@@ -3,13 +3,16 @@ import Link from 'next/link';
 import { apiClient } from '../../../../utils/apiClient';
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import { useGlobalContext } from '../../../../context/GlobalContext';
+import { ChevronRight } from 'lucide-react';
 
 const catLayout = ({ children }) => {
   const { cat_slug } = useParams();
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState({});
   const [attributes, setAttributes] = useState([]);
-  const [categories, setCategories] = useState([]);
+
+  const { categories } = useGlobalContext();
 
   const fetchCatAttributes = async (id) => {
     setLoading(true);
@@ -49,29 +52,8 @@ const catLayout = ({ children }) => {
     }
   };
 
-  const fetchCategories = async () => {
-    setLoading(true);
-    try {
-      const data = await apiClient.fetchCategories();
-
-      if (data.error) {
-        alert(data.message);
-        setLoading(false);
-        return;
-      }
-      console.log(data);
-      setCategories(data);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-      alert('Something went wrong');
-    }
-  };
-
   useEffect(() => {
     getCategoryDetails(cat_slug);
-    fetchCategories();
   }, []);
 
   return (
@@ -125,7 +107,22 @@ const catLayout = ({ children }) => {
       </aside>
       <main className="ml-96">
         <div className="container mx-auto p-4">
-          <h1 className="text-2xl font-semibold mb-4">{category.name}</h1>
+          {categories.length ? (
+            <div className="inline-flex items-center gap-2">
+              <span className="text-sm text-gray-500">Categories</span>
+              <ChevronRight size={15} className="inline-block" />
+
+              <p className="text-sm">
+                {loading ? (
+                  <span className="h-6 bg-gray-300 animate-pulse rounded"></span>
+                ) : (
+                  <span className="font-medium">{category.name}</span>
+                )}
+              </p>
+            </div>
+          ) : (
+            <div className="h-6 inline-block w-sm bg-gray-300 animate-pulse rounded"></div>
+          )}
         </div>
         <section>{children}</section>
       </main>
