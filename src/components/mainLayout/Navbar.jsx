@@ -4,9 +4,17 @@ import React from 'react';
 
 import { useGlobalContext } from '../../context/GlobalContext';
 import { deleteCookie } from '../../utils/cookies';
+import {
+  Popover,
+  PopoverBackdrop,
+  PopoverButton,
+  PopoverPanel,
+} from '@headlessui/react';
 
 const Navbar = () => {
-  const { isLogin, setIsLogin } = useGlobalContext();
+  const { isLogin, setIsLogin, categories, userProfile } = useGlobalContext();
+
+  console.log('userProfile', userProfile);
 
   const handleLogout = () => {
     deleteCookie('access_token');
@@ -20,7 +28,24 @@ const Navbar = () => {
       <h2 className="text-2xl">Amazing Cart</h2>
       <nav className="hidden md:flex gap-5">
         <Link href={'/'}>Home</Link>
-        <Link href={'/shop'}>Shop</Link>
+        <Popover className="relative">
+          <PopoverButton className="cursor-pointer">Shop</PopoverButton>
+          <PopoverBackdrop
+            transition
+            className="fixed inset-0 bg-black/15 transition duration-100 ease-out data-closed:opacity-0"
+          />
+          <PopoverPanel
+            anchor="bottom"
+            transition
+            className="flex origin-top mt-5 z-20 p-4 flex-col divide-y divide-gray-200 bg-white transition duration-200 ease-out data-closed:scale-95 data-closed:opacity-0"
+          >
+            {categories.map((cat) => (
+              <Link className="p-1" href={`/categories/${cat.slug}`}>
+                {cat.name}
+              </Link>
+            ))}
+          </PopoverPanel>
+        </Popover>
       </nav>
       <nav className="flex gap-5">
         {!isLogin ? (
@@ -31,8 +56,37 @@ const Navbar = () => {
           </>
         ) : (
           <div className="flex gap-2 items-center">
-            <button>Account</button>
-            <button onClick={handleLogout}>Log out</button>
+            <Popover className="relative">
+              <PopoverButton>
+                <div className="h-10 w-10 rounded-full bg-gray-300 flex justify-center items-center text-2xl font-semibold text-gray-800 cursor-pointer">
+                  {userProfile?.full_name[0].toUpperCase()}
+                </div>
+              </PopoverButton>
+              <PopoverBackdrop
+                transition
+                className="fixed inset-0 bg-black/15 transition duration-100 ease-out data-closed:opacity-0"
+              />
+              <PopoverPanel
+                anchor="bottom"
+                transition
+                className="flex origin-top mt-2 z-20 p-4 flex-col divide-y divide-gray-200 bg-white transition duration-200 ease-out data-closed:scale-95 data-closed:opacity-0"
+              >
+                <Link className="p-1" href={'/cart'}>
+                  Cart
+                </Link>
+                <Link className="p-1" href={'/orders'}>
+                  Orders
+                </Link>
+                <Link className="p-1" href={'/profile'}>
+                  Profile
+                </Link>
+                <Link className="p-1" href={'/address'}>
+                  Wish List
+                </Link>
+
+                <button onClick={handleLogout}>Log out</button>
+              </PopoverPanel>
+            </Popover>
           </div>
         )}
       </nav>
