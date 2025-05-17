@@ -1,14 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import ProductCard from '../../components/Card';
 import { apiClient } from '../../utils/apiClient';
 import Link from 'next/link';
+import { useGlobalContext } from '../../context/GlobalContext';
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const { categories } = useGlobalContext();
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -30,29 +32,8 @@ const HomePage = () => {
     }
   };
 
-  const fetchCategories = async () => {
-    setLoading(true);
-    try {
-      const data = await apiClient.fetchCategories();
-
-      if (data.error) {
-        alert(data.message);
-        setLoading(false);
-        return;
-      }
-      console.log(data);
-      setCategories(data);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-      alert('Something went wrong');
-    }
-  };
-
   useEffect(() => {
     fetchProducts();
-    fetchCategories();
   }, []);
 
   return (
