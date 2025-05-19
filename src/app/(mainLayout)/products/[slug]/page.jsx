@@ -5,9 +5,28 @@ import { apiClient } from '../../../../utils/apiClient';
 import { paiseToRupee } from '../../../../utils/calculation';
 
 const ProductDetailsPage = () => {
+  const [variant, setVariant] = useState({});
   const [productDetails, setProductDetails] = useState({});
 
   const { slug } = useParams();
+
+  const addToCart = async () => {
+    try {
+      const data = await apiClient.addToCart({
+        variant_id: variant.variant_id,
+      });
+      console.log(data);
+      if (data.error) {
+        alert(data.message);
+        return;
+      }
+
+      alert(data.message);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const fetchProductDeatils = async (slug) => {
     try {
       const data = await apiClient.getProductBySlug(slug);
@@ -18,6 +37,7 @@ const ProductDetailsPage = () => {
         return;
       }
       setProductDetails(data);
+      setVariant(data.variants[0]);
     } catch (error) {
       console.log(error);
     }
@@ -43,6 +63,17 @@ const ProductDetailsPage = () => {
                 className="h-32 w-32 object-contain border border-gray-200 shadow"
               />
             ))}
+          </div>
+          <div className="flex gap-2 mt-2 justify-center">
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+              onClick={addToCart}
+            >
+              Add to Cart
+            </button>
+            <button className="bg-green-500 text-white px-4 py-2 rounded ml-2">
+              Buy Now
+            </button>
           </div>
         </div>
       ) : (
