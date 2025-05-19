@@ -12,7 +12,8 @@ import {
 } from '@headlessui/react';
 
 const Navbar = () => {
-  const { isLogin, setIsLogin, categories, userProfile } = useGlobalContext();
+  const { isLogin, setIsLogin, categories, userProfile, cart } =
+    useGlobalContext();
 
   console.log('userProfile', userProfile);
 
@@ -72,7 +73,12 @@ const Navbar = () => {
                 className="flex origin-top mt-2 z-20 p-4 flex-col divide-y divide-gray-200 bg-white transition duration-200 ease-out data-closed:scale-95 data-closed:opacity-0"
               >
                 <Link className="p-1" href={'/cart'}>
-                  Cart
+                  Cart{' '}
+                  {cart?.length > 0 && (
+                    <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full ml-2">
+                      {cart?.length}
+                    </span>
+                  )}
                 </Link>
                 <Link className="p-1" href={'/orders'}>
                   Orders
