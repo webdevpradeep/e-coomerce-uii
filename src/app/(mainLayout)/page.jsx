@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react';
 // import { apiClient } from "../../utils/apiClient";
 import Link from 'next/link';
 import { useGlobalContext } from '../../context/GlobalContext';
-import Carousel from '../../components/Carousel';
-import ProductSlider from '../../components/ProductSlider';
-import CategorySlider from '../../components/CategorySlider';
+import Carousel from '../../components/carousel';
+import ProductSlider from '../../components/productSlider';
+import CategorySlider from '../../components/categorySlider';
 
 const HomePage = () => {
   // const [products, setProducts] = useState([]);
