@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function ProductCard({ product }) {
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="bg-yellow-200 border-1 rounded-b-lg shadow-md overflow-hidden">
       {/* Product Image */}
       <div className="relative">
         <img
