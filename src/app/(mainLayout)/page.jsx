@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
-// import ProductCard from "../../components/Card";
-// import { apiClient } from "../../utils/apiClient";
+import ProductCard from '../../components/Card';
+import { apiClient } from '../../utils/apiClient';
 import Link from 'next/link';
 import { useGlobalContext } from '../../context/GlobalContext';
 import Carousel from '../../components/carousel';
@@ -9,29 +9,29 @@ import ProductSlider from '../../components/productSlider';
 import CategorySlider from '../../components/categorySlider';
 
 const HomePage = () => {
-  // const [products, setProducts] = useState([]);
-  // const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const { categories } = useGlobalContext();
 
-  // const fetchProducts = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const data = await apiClient.getProducts();
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const data = await apiClient.getProducts();
 
-  //     if (data.error) {
-  //       alert(data.message);
-  //       setLoading(false);
-  //       return;
-  //     }
-  //     console.log(data);
-  //     setProducts(data);
-  //     setLoading(false);
-  //   } catch (error) {
-  //     console.log(error);
-  //     setLoading(false);
-  //     alert("Something went wrong");
-  //   }
-  // };
+      if (data.error) {
+        alert(data.message);
+        setLoading(false);
+        return;
+      }
+      console.log(data);
+      setProducts(data);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      alert('Something went wrong');
+    }
+  };
 
   const images = [
     'https://www.arduinokart.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2F1.ee16cdea.webp&w=3840&q=100',
@@ -41,7 +41,7 @@ const HomePage = () => {
 
   return (
     <div className="p-5">
-      {/* <Carousel slides={images} /> */}
+      <Carousel slides={images} />
 
       <CategorySlider categories={categories} />
 
