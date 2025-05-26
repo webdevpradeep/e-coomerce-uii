@@ -25,7 +25,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className="h-16 fixed top-0 left-0 right-0 z-10 bg-gray-800 text-gray-50 flex justify-between gap-5 items-center px-5">
+    <header className="h-16 fixed top-0 left-0 right-0 z-10 bg-green-900 text-gray-50 flex justify-between gap-5 items-center px-5">
       <h2 className="text-2xl">Amazing Cart</h2>
       <nav className="hidden md:flex gap-5">
         <Link href={'/'}>Home</Link>
