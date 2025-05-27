@@ -4,9 +4,11 @@ import { apiClient } from '../../../../utils/apiClient';
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { useGlobalContext } from '../../../../context/GlobalContext';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Menu } from 'lucide-react';
+import { createContext } from 'vm';
 
-const catLayout = ({ children }) => {
+const CatLayout = ({ children }) => {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { cat_slug } = useParams();
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState({});
@@ -54,13 +56,37 @@ const catLayout = ({ children }) => {
 
   useEffect(() => {
     getCategoryDetails(cat_slug);
+
+    if (window !== undefined && window.innerWidth > 768) {
+      setIsDrawerOpen(true);
+    }
+
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setIsDrawerOpen(false);
+      } else {
+        setIsDrawerOpen(true);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   return (
     <div>
-      <aside className="fixed top-16 left-0 bottom-0 w-96 overflow-y-auto bg-red-100 h-screen p-5">
+      <aside
+        className={`${
+          isDrawerOpen ? 'w-96 p-5' : 'w-0 p-0'
+        } fixed top-16 left-0 bottom-0 overflow-y-auto myscrollbar bg-green-50 h-screen transition-all duration-500`}
+      >
         <div className="mb-5 border-b-2 border-gray-300 pb-5">
-          <h1 className="text-2xl font-semibold mb-2">Categories</h1>
+          <h1 className="text-2xl text-green-800 font-semibold mb-2">
+            Categories
+          </h1>
           {loading ? (
             [...Array(5)].map((_, index) => (
               <div
@@ -74,7 +100,7 @@ const catLayout = ({ children }) => {
                 <li key={category.id}>
                   <Link
                     href={`/categories/${category.slug}`}
-                    className={`text-lg text-blue-500 hover:underline ${
+                    className={`text-lg text-gray-900 hover:underline ${
                       cat_slug === category.slug ? 'font-semibold' : ''
                     }`}
                   >
@@ -97,18 +123,29 @@ const catLayout = ({ children }) => {
           <ul className="flex flex-col gap-2">
             {attributes.map((attr) => (
               <li key={attr.id}>
-                <p className={`text-lg text-blue-500 hover:underline`}>
-                  {attr.name}
-                </p>
+                <p className="text-green-800">{attr.name}</p>
+                {attr.values.map((value) => (
+                  <div className="flex items-center gap-2 mt-1">
+                    <input id={value} type="checkbox" />
+                    <label htmlFor={value} className="cursor-pointer">
+                      {value}
+                    </label>
+                  </div>
+                ))}
               </li>
             ))}
           </ul>
         )}
       </aside>
-      <main className="ml-96">
-        <div className="container mx-auto p-4">
+      <main
+        className={`${
+          isDrawerOpen ? 'ml-96' : 'ml-0'
+        } transition-all duration-500`}
+      >
+        <div className="p-4">
           {categories.length ? (
             <div className="inline-flex items-center gap-2">
+              <Menu onClick={() => setIsDrawerOpen(!isDrawerOpen)} />
               <span className="text-sm text-gray-500">Categories</span>
               <ChevronRight size={15} className="inline-block" />
 
@@ -116,7 +153,9 @@ const catLayout = ({ children }) => {
                 {loading ? (
                   <span className="h-6 bg-gray-300 animate-pulse rounded"></span>
                 ) : (
-                  <span className="font-medium">{category.name}</span>
+                  <span className="font-medium whitespace-nowrap">
+                    {category.name}
+                  </span>
                 )}
               </p>
             </div>
@@ -130,4 +169,4 @@ const catLayout = ({ children }) => {
   );
 };
 
-export default catLayout;
+export default CatLayout;
